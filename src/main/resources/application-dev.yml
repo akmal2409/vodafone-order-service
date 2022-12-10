@@ -23,3 +23,11 @@ management:
       enabled: true
     diskspace:
       enabled: true
+
+app:
+  user-service:
+    api-url: "https://reqres.in"
+
+logging:
+  level:
+    com.akmal.*: DEBUG
