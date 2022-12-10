@@ -1,0 +1,45 @@
+# This docker compose is solely for dev purposes. It does not include application containers and just needed 3rd party services like DBs.
+
+version: '3.7'
+services:
+  postgres01:
+    image: postgres:latest
+    hostname: "postgres01"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=dev_db
+      # For a create_dev_db.sh script that will initialise the user and the database
+      - DEV_USER=order_service
+      - DEV_PASSWORD=order_service
+      - DEV_USER_DB_NAME=order_service
+    restart: "always"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dev_db"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - "postgres01_data_dev:/var/lib/postgresql/data"
+      - "./scripts/create_dev_db.sh:/docker-entrypoint-initdb.d/create_dev_db.sh"
+  order-service:
+    build: './'
+    image: order-service:latest
+    environment:
+      - SERVER_PORT=8080
+      - "SPRING_DATASOURCE_URL=jdbc:postgresql://postgres01:5432/order_service"
+      - SPRING_DATASOURCE_USERNAME=order_service
+      - SPRING_DATASOURCE_PASSWORD=order_service
+    depends_on:
+      postgres01:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+volumes:
+  postgres01_data_dev:
+
+networks:
+  internal:
+
