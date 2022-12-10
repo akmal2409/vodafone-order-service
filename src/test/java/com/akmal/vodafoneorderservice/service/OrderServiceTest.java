@@ -66,7 +66,7 @@ class OrderServiceTest {
     // when
     when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User(1, null, null, orderRequest.email())));
     when(orderRepository.save(any(Order.class))).thenThrow(new DataIntegrityViolationException("Duplicate key for product email pair",
-        new ConstraintViolationException("duplicate key", null, "unique")));
+        new ConstraintViolationException("duplicate key", null, Order.UNIQUE_ORDER_CONSTRAINT)));
 
     // then
     assertThatThrownBy(() -> {

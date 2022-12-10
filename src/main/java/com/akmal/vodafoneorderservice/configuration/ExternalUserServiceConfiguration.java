@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * Externalised configuration of a client and a repository for the user management
+ */
 @Configuration
 @RequiredArgsConstructor
 public class ExternalUserServiceConfiguration {

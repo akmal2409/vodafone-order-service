@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "orders")
 public class Order {
 
+  public static final String UNIQUE_ORDER_CONSTRAINT = "orders_email_product_id_key";
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")

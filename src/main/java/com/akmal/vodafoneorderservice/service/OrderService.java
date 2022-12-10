@@ -1,5 +1,7 @@
 package com.akmal.vodafoneorderservice.service;
 
+import static com.akmal.vodafoneorderservice.model.Order.UNIQUE_ORDER_CONSTRAINT;
+
 import com.akmal.vodafoneorderservice.dto.OrderCreationRequest;
 import com.akmal.vodafoneorderservice.dto.OrderDto;
 import com.akmal.vodafoneorderservice.exception.OrderPlacementException;
@@ -46,7 +48,8 @@ public class OrderService {
       savedOrder = this.orderRepository.save(order);
     } catch (DataIntegrityViolationException ex) {
       for (Throwable cause = ex.getCause(); cause != null; cause = cause.getCause()) {
-        if (ConstraintViolationException.class.equals(cause.getClass())) {
+        if (cause instanceof ConstraintViolationException constraintViolationException &&
+                UNIQUE_ORDER_CONSTRAINT.equals(constraintViolationException.getConstraintName())) {
           throw new OrderPlacementException("Failed to place an order. Reason: the order already exists", ex);
         }
       }
