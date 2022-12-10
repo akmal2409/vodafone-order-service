@@ -1,0 +1,25 @@
+spring:
+  sql:
+    init:
+      mode: 'always'
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/order_service"
+    username: "order_service"
+    password: "order_service"
+
+
+management:
+  endpoints:
+    web:
+      exposure.include: '*'
+      base-path: "/"
+    enabled-by-default: true
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
+  health:
+    db:
+      enabled: true
+    diskspace:
+      enabled: true
