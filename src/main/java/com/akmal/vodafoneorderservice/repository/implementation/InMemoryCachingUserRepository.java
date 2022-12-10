@@ -60,4 +60,9 @@ public class InMemoryCachingUserRepository implements UserRepository {
   public Optional<User> findByEmail(String email) {
     return Optional.ofNullable(emailToUserMap.get(email));
   }
+
+  @Override
+  public void save(User user) {
+    this.emailToUserMap.put(user.email(), user);
+  }
 }
