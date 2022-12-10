@@ -43,6 +43,10 @@ class OrderServiceIT {
                                                                    .withPassword("test")
                                                                    .withExposedPorts(5432);
 
+  static {
+    postgreSQLContainer.start();
+  }
+
   @LocalServerPort
   int port;
 
@@ -73,7 +77,8 @@ class OrderServiceIT {
 
   @DynamicPropertySource
   static void registerDbProps(DynamicPropertyRegistry propertyRegistry) {
-    propertyRegistry.add("spring.datasource.url", () -> postgreSQLContainer.getJdbcUrl());
+    propertyRegistry.add("spring.datasource.url", () -> String.format("jdbc:postgresql://127.0.0.1:%d/%s",
+        postgreSQLContainer.getFirstMappedPort(), postgreSQLContainer.getDatabaseName()));
     propertyRegistry.add("spring.datasource.username", () -> postgreSQLContainer.getUsername());
     propertyRegistry.add("spring.datasource.password", () -> postgreSQLContainer.getPassword());
   }
