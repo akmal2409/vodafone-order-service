@@ -1,0 +1,13 @@
+spring:
+  sql:
+    init:
+      mode: 'always'
+
+
+app:
+  user-service:
+    api-url: "https://reqres.in"
+
+logging:
+  level:
+    com.akmal.*: DEBUG
