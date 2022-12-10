@@ -31,5 +31,5 @@ public class Order {
   private String lastName;
 
   @Column(name = "product_id", nullable = false)
-  private int productId;
+  private String productId;
 }
