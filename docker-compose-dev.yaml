@@ -9,6 +9,10 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=dev_db
+      # For a create_dev_db.sh script that will initialise the user and the database
+      - DEV_USER=order_service
+      - DEV_PASSWORD=order_service
+      - DEV_USER_DB_NAME=order_service
     restart: "always"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d dev_db"]
@@ -19,8 +23,7 @@ services:
       - "5432:5432"
     volumes:
       - "postgres01_data:/var/lib/postgresql/data"
-
-
+      - "./scripts/create_dev_db.sh:/docker-entrypoint-initdb.d/create_dev_db.sh"
 volumes:
   postgres01_data:
 
