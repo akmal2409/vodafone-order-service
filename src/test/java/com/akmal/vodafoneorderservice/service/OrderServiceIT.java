@@ -67,7 +67,7 @@ class OrderServiceIT {
   public void init() {
     final var delegate = this.restTemplateBuilder.rootUri(String.format("http://localhost:%d", this.port));
     this.restTemplate = new TestRestTemplate(delegate, null, null, HttpClientOption.ENABLE_COOKIES);
-    this.userRepository.save(new User(1, "", "", "test@example.com"));
+    this.userRepository.save(new User(1, "Test Name", "Test Lastname", "test@example.com"));
   }
 
   @AfterEach
@@ -108,5 +108,18 @@ class OrderServiceIT {
         .isNotNull()
         .extracting(ResponseEntity::getStatusCode)
         .is(new Condition<>(HttpStatusCode::isError, "Expected client error Bad Request"));
+  }
+
+  @Test
+  @DisplayName("Should persist all properties to the database")
+  void shouldPersisAllPropertiesToTheDatabase() {
+    final var request = new OrderCreationRequest("123", "test@example.com");
+
+    OrderDto orderDto = this.restTemplate.postForEntity("/api/v1/orders", request, OrderDto.class).getBody();
+
+    assertThat(orderDto)
+        .isNotNull()
+        .usingRecursiveComparison()
+        .isEqualTo(new OrderDto(orderDto.orderId(), request.email(), "Test Name", "Test Lastname", "123"));
   }
 }
